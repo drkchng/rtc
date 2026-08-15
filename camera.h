@@ -7,6 +7,7 @@ class camera {
    public:
       double aspect_ratio = 1.0;
       double img_width = 100;
+      
       void render(const hittable& world) {
          initialize();
          
@@ -48,12 +49,12 @@ class camera {
          auto vp_v = vec3(0,-vp_height,0);
 
                              // Calculate pixel delta vectors
-         auto pixel_delta_u = vp_u / img_width;
-         auto pixel_delta_v = vp_v / img_height;
+         pixel_delta_u = vp_u / img_width;
+         pixel_delta_v = vp_v / img_height;
 
                              // Upper left pixel.
          auto vp_upper_left = center - vec3(0, 0, focal_length) - vp_u/2 -vp_v/2;
-         auto pixel00_loc = vp_upper_left + (pixel_delta_u + pixel_delta_v)/2; 
+         pixel00_loc = vp_upper_left + (pixel_delta_u + pixel_delta_v)/2;
       }
    
    color ray_color(const ray& r, const hittable& world) const {
@@ -62,7 +63,7 @@ class camera {
          return 0.5 * (rec.normal + color(1,1,1));
       }
 
-      vec3 unit_dir = unit_vec3 (r.direction());
+      vec3 unit_dir = unit_vec3(r.direction());
       auto a = 0.5 * (unit_dir.y() + 1.0);
       return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
    }
