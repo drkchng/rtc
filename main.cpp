@@ -1,21 +1,15 @@
-#include "color.h"
-#include "ray.h"
-#include "vec3.h"
+#include "main_utility.h"
 
-#include <iostream>
+#include "hittable.h"
+#include "hittable_list.h"
+#include "sphere.h"
 
-bool hit_sphere(const point3& center, double radius, const ray& r) {
-   vec3 oc = center - r.origin();
-   auto a = dot(r.direction(), r.direction());
-   auto b = -2.0 * dot(r.direction(), oc);
-   auto c = dot(oc, oc) - radius * radius;
-   auto discriminant = b*b - 4*a*c;
-   return (discriminant >= 0);
-}
-color ray_color(const ray& r) {
-   if (hit_sphere(point3(0, 0, -1), 0.5, r))
-      return color(1, 0 , 0);
-      
+color ray_color(const ray& r, const hittable& world) {
+      hit_record rec;
+      if (world.hit(r, interval(0, infinity), rec)) {
+         return 0.5 * (rec.normal + color(1,1,1));
+      }
+
    vec3 unit_dir = unit_vec3 (r.direction());
    auto a = 0.5 * (unit_dir.y() + 1.0);
    return (1.0 - a) * color(1.0, 1.0, 1.0) + a * color(0.5, 0.7, 1.0);
@@ -47,6 +41,10 @@ int main() {
    auto vp_upper_left = camera_center - vec3(0, 0, focal_length) - vp_u/2 -vp_v/2;
    auto pixel00_loc = vp_upper_left + (pixel_delta_u + pixel_delta_v)/2;
 
+                             // World
+   hittable_list world;
+   world.add(make_shared<sphere>(point3(0, 0, -1), 0.5));
+   world.add(make_shared<sphere>(point3(0, -100.5, -1), 100));
                              // Render
    std::cout << "P3\n" << img_width << ' ' << img_height << "\n255\n";
    for (int i = 0; i < img_height; i++) {
@@ -55,7 +53,7 @@ int main() {
          auto pixel_center = pixel00_loc + (j * pixel_delta_u) + (i * pixel_delta_v);
          auto ray_direction = pixel_center - camera_center;
          ray r(camera_center, ray_direction);
-         auto pixel_color = ray_color(r);
+         auto pixel_color = ray_color(r, world);
          /*auto pixel_color = color(double(i+j)/(img_height+img_width-2),
                                   double(i+j)/(img_height+img_width-2),
                                   double(i+j)/(img_height+img_width-2));*/
