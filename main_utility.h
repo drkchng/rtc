@@ -31,6 +31,7 @@ inline double random_double(double min, double max) {
    return min + (max-min) * random_double();
 }
 
+
                              // Common headers
 #include "color.h"
 #include "ray.h"

@@ -40,11 +40,11 @@ class camera {
 
       void initialize() {
          img_height = int(img_width/ aspect_ratio);
-         img_height = (img_height <1) ? 1: img_height;
+         img_height = (img_height < 1) ? 1: img_height;
 
          pixel_samples_scale = 1.0 / samples_per_pixel;
 
-         center = point3(0, 0, 0);
+         center = point3(0.0, 0.0, 0.0);
 
                              // viewport dimensions
          auto focal_length = 1.0;
@@ -52,15 +52,15 @@ class camera {
          auto vp_width = vp_height * (double(img_width)/img_height);
 
                              // Calculate edge to edge vectors
-         auto vp_u = vec3(vp_width, 0, 0);
-         auto vp_v = vec3(0,-vp_height,0);
+         auto vp_u = vec3(vp_width, 0.0, 0.0);
+         auto vp_v = vec3(0.0, -vp_height, 0.0);
 
                              // Calculate pixel delta vectors
          pixel_delta_u = vp_u / img_width;
          pixel_delta_v = vp_v / img_height;
 
                              // Upper left pixel.
-         auto vp_upper_left = center - vec3(0, 0, focal_length) - vp_u/2 -vp_v/2;
+         auto vp_upper_left = center - vec3(0.0, 0.0, focal_length) - vp_u/2 -vp_v/2;
          pixel00_loc = vp_upper_left + (pixel_delta_u + pixel_delta_v)/2;
       }
    
@@ -80,12 +80,12 @@ class camera {
 
       vec3 sample_square() const {
                              // Returns the vector to a random point in the -.5, +.5 square.
-         return vec3(random_double() - 0.5, random_double() - 0.5, 0);
+         return vec3(random_double() - 0.5, random_double() - 0.5, 0.0);
       }
 
       color ray_color(const ray& r, int depth, const hittable& world) const {
          if (depth <= 0)
-            return color(0, 0, 0);
+            return color(0.0, 0.0, 0.0);;
 
          hit_record rec;
 
@@ -94,7 +94,8 @@ class camera {
             color attenuation;
             if (rec.mat->scatter(r, rec, attenuation, scattered))
                return attenuation * ray_color(scattered, depth-1, world);
-            return color(0, 0, 0);
+
+            return color(0.0, 0.0, 0.0);;
          }
 
          vec3 unit_dir = unit_vec3(r.direction());
