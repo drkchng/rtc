@@ -4,6 +4,10 @@ A small ray tracer written in C++20. It renders a scene of spheres with diffuse,
 
 This project is based on the tutorial **[Ray Tracing in One Weekend](https://raytracing.github.io/books/RayTracingInOneWeekend.html)** by Peter Shirley, Trevor David Black, and Steve Hollasch. The commit history follows the book's progression, from the first PPM output through materials, camera, and depth of field to the final random scene.
 
+![A 1920x1080 render of the final scene: hundreds of small spheres with matte, metal, and glass materials in front of three large spheres, with depth-of-field blur](image.png)
+
+*The final scene at 1920×1080: matte, metal, and glass spheres with depth of field.*
+
 ## Features
 
 - Sphere primitives and a list of hittable objects
